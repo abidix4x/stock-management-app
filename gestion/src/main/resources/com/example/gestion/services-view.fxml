@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="10.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestion.controller.ServiceController">
+    <children>
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <children>
+                <Label text="Rechercher:" />
+                <TextField fx:id="searchField" prefHeight="25.0" prefWidth="300.0" promptText="Nom ou responsable" />
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+        </HBox>
+        <TableView fx:id="serviceTable" prefHeight="300.0" prefWidth="800.0">
+            <columns>
+                <TableColumn fx:id="nomColumn" prefWidth="200.0" text="Nom" />
+                <TableColumn fx:id="responsableColumn" prefWidth="200.0" text="Responsable" />
+                <TableColumn fx:id="telephoneColumn" prefWidth="150.0" text="Téléphone" />
+                <TableColumn fx:id="emailColumn" prefWidth="200.0" text="Email" />
+            </columns>
+        </TableView>
+        <VBox spacing="10.0">
+            <children>
+                <HBox spacing="10.0">
+                    <children>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Nom" />
+                                <TextField fx:id="nomField" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Responsable" />
+                                <TextField fx:id="responsableField" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <HBox spacing="10.0">
+                    <children>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Téléphone" />
+                                <TextField fx:id="telephoneField" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Email" />
+                                <TextField fx:id="emailField" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#handleNouveau" text="Nouveau" />
+                        <Button mnemonicParsing="false" onAction="#handleAjouter" text="Ajouter" />
+                        <Button mnemonicParsing="false" onAction="#handleModifier" text="Modifier" />
+                        <Button mnemonicParsing="false" onAction="#handleSupprimer" text="Supprimer" />
+                    </children>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+        </VBox>
+    </children>
+</VBox>

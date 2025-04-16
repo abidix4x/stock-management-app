@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<VBox spacing="20.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestion.controller.DashboardController">
+    <children>
+        <GridPane hgap="20.0" vgap="20.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="120.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <VBox style="-fx-background-color: white; -fx-border-color: #eeeeee; -fx-border-width: 1; -fx-background-radius: 3; -fx-border-radius: 3;" GridPane.columnIndex="0">
+                    <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                    </padding>
+                    <children>
+                        <Label text="Total Produits" style="-fx-text-fill: #777777;">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="totalProduitsLabel" text="0" style="-fx-text-fill: #2c3e50;">
+                            <font>
+                                <Font name="System Bold" size="28.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="5.0" />
+                            </VBox.margin>
+                        </Label>
+                        <Label text="produits en stock" style="-fx-text-fill: #999999;">
+                            <font>
+                                <Font size="11.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="5.0" />
+                            </VBox.margin>
+                        </Label>
+                    </children>
+                </VBox>
+
+                <VBox style="-fx-background-color: white; -fx-border-color: #eeeeee; -fx-border-width: 1; -fx-background-radius: 3; -fx-border-radius: 3;" GridPane.columnIndex="1">
+                    <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                    </padding>
+                    <children>
+                        <Label text="Commandes en cours" style="-fx-text-fill: #777777;">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="commandesEnCoursLabel" text="0" style="-fx-text-fill: #2980b9;">
+                            <font>
+                                <Font name="System Bold" size="28.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="5.0" />
+                            </VBox.margin>
+                        </Label>
+                        <Label text="commandes à traiter" style="-fx-text-fill: #999999;">
+                            <font>
+                                <Font size="11.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="5.0" />
+                            </VBox.margin>
+                        </Label>
+                    </children>
+                </VBox>
+
+                <VBox style="-fx-background-color: white; -fx-border-color: #eeeeee; -fx-border-width: 1; -fx-background-radius: 3; -fx-border-radius: 3;" GridPane.columnIndex="2">
+                    <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                    </padding>
+                    <children>
+                        <Label text="Produits en alerte" style="-fx-text-fill: #777777;">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="produitsEnAlerteLabel" text="0" style="-fx-text-fill: #c0392b;">
+                            <font>
+                                <Font name="System Bold" size="28.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="5.0" />
+                            </VBox.margin>
+                        </Label>
+                        <Label text="produits à commander" style="-fx-text-fill: #999999;">
+                            <font>
+                                <Font size="11.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="5.0" />
+                            </VBox.margin>
+                        </Label>
+                    </children>
+                </VBox>
+
+                <VBox style="-fx-background-color: white; -fx-border-color: #eeeeee; -fx-border-width: 1; -fx-background-radius: 3; -fx-border-radius: 3;" GridPane.columnIndex="3">
+                    <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                    </padding>
+                    <children>
+                        <Label text="Produits critiques" style="-fx-text-fill: #777777;">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="produitsCritiquesLabel" text="0" style="-fx-text-fill: #d35400;">
+                            <font>
+                                <Font name="System Bold" size="28.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="5.0" />
+                            </VBox.margin>
+                        </Label>
+                        <Label text="produits à surveiller" style="-fx-text-fill: #999999;">
+                            <font>
+                                <Font size="11.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="5.0" />
+                            </VBox.margin>
+                        </Label>
+                    </children>
+                </VBox>
+            </children>
+        </GridPane>
+
+        <VBox style="-fx-background-color: white; -fx-border-color: #eeeeee; -fx-border-width: 1; -fx-background-radius: 3; -fx-border-radius: 3;">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+            <children>
+                <Label text="Informations système" style="-fx-text-fill: #333333;">
+                    <font>
+                        <Font name="System Bold" size="16.0" />
+                    </font>
+                </Label>
+                <VBox spacing="10.0">
+                    <VBox.margin>
+                        <Insets top="15.0" />
+                    </VBox.margin>
+                    <children>
+                        <Label text="Bienvenue dans le système de gestion de stock ISIMM." style="-fx-text-fill: #555555;">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                        </Label>
+                        <Label text="Ce système vous permet de gérer efficacement l'inventaire, les commandes et les mouvements de stock." style="-fx-text-fill: #555555;">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                        </Label>
+                        <Label text="Utilisez le menu de gauche pour naviguer entre les différentes fonctionnalités du système." style="-fx-text-fill: #555555;">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
+                <HBox spacing="40.0">
+                    <VBox.margin>
+                        <Insets top="20.0" />
+                    </VBox.margin>
+                    <children>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Version du système" style="-fx-text-fill: #777777;">
+                                    <font>
+                                        <Font size="11.0" />
+                                    </font>
+                                </Label>
+                                <Label text="1.0.0" style="-fx-text-fill: #333333;">
+                                    <font>
+                                        <Font name="System Bold" size="13.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </VBox>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Date de dernière mise à jour" style="-fx-text-fill: #777777;">
+                                    <font>
+                                        <Font size="11.0" />
+                                    </font>
+                                </Label>
+                                <Label text="15 Avril 2024" style="-fx-text-fill: #333333;">
+                                    <font>
+                                        <Font name="System Bold" size="13.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </VBox>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Développé par" style="-fx-text-fill: #777777;">
+                                    <font>
+                                        <Font size="11.0" />
+                                    </font>
+                                </Label>
+                                <Label text="Équipe ISIMM" style="-fx-text-fill: #333333;">
+                                    <font>
+                                        <Font name="System Bold" size="13.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+</VBox>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="20.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestion.controller.ProduitController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+    <children>
+        <!-- Search Section -->
+        <VBox style="-fx-background-color: white; -fx-border-color: #eeeeee; -fx-border-width: 1; -fx-background-radius: 3; -fx-border-radius: 3;">
+            <padding>
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+            </padding>
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="15.0">
+                    <children>
+                        <Label text="Rechercher:" style="-fx-text-fill: #555555;">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="searchField" prefHeight="30.0" prefWidth="300.0" promptText="Référence ou désignation" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-radius: 3;" />
+                        <HBox alignment="CENTER_RIGHT" spacing="10.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#handleNouveau" text="Nouveau produit" style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-background-radius: 3; -fx-cursor: hand;">
+                                    <font>
+                                        <Font size="12.0" />
+                                    </font>
+                                    <padding>
+                                        <Insets bottom="7.0" left="12.0" right="12.0" top="7.0" />
+                                    </padding>
+                                </Button>
+                            </children>
+                        </HBox>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+
+        <!-- Product Table Section -->
+        <VBox style="-fx-background-color: white; -fx-border-color: #eeeeee; -fx-border-width: 1; -fx-background-radius: 3; -fx-border-radius: 3;" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+            </padding>
+            <children>
+                <Label text="Liste des produits" style="-fx-text-fill: #333333;">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Label>
+                <TableView fx:id="produitTable" prefHeight="300.0" prefWidth="800.0" style="-fx-border-color: #eeeeee; -fx-border-width: 1;">
+                    <VBox.margin>
+                        <Insets top="10.0" />
+                    </VBox.margin>
+                    <columns>
+                        <TableColumn fx:id="referenceColumn" prefWidth="100.0" text="Référence" />
+                        <TableColumn fx:id="designationColumn" prefWidth="200.0" text="Désignation" />
+                        <TableColumn fx:id="typeColumn" prefWidth="100.0" text="Type" />
+                        <TableColumn fx:id="categorieColumn" prefWidth="100.0" text="Catégorie" />
+                        <TableColumn fx:id="quantiteColumn" prefWidth="75.0" text="Quantité" />
+                        <TableColumn fx:id="stockMinimalColumn" prefWidth="100.0" text="Stock Min" />
+                        <TableColumn fx:id="datePeremptionColumn" prefWidth="125.0" text="Date Péremption" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+
+        <!-- Product Details Section -->
+        <VBox style="-fx-background-color: white; -fx-border-color: #eeeeee; -fx-border-width: 1; -fx-background-radius: 3; -fx-border-radius: 3;">
+            <padding>
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+            </padding>
+            <children>
+                <Label text="Détails du produit" style="-fx-text-fill: #333333;">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Label>
+                <HBox spacing="15.0">
+                    <VBox.margin>
+                        <Insets top="15.0" />
+                    </VBox.margin>
+                    <children>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Référence" style="-fx-text-fill: #555555;">
+                                    <font>
+                                        <Font size="12.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="referenceField" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-radius: 3;" prefWidth="150.0" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Désignation" style="-fx-text-fill: #555555;">
+                                    <font>
+                                        <Font size="12.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="designationField" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-radius: 3;" prefWidth="200.0" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Type" style="-fx-text-fill: #555555;">
+                                    <font>
+                                        <Font size="12.0" />
+                                    </font>
+                                </Label>
+                                <ComboBox fx:id="typeComboBox" prefWidth="120.0" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-radius: 3;" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Catégorie" style="-fx-text-fill: #555555;">
+                                    <font>
+                                        <Font size="12.0" />
+                                    </font>
+                                </Label>
+                                <ComboBox fx:id="categorieComboBox" prefWidth="120.0" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-radius: 3;" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <HBox spacing="15.0">
+                    <VBox.margin>
+                        <Insets top="15.0" />
+                    </VBox.margin>
+                    <children>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Quantité" style="-fx-text-fill: #555555;">
+                                    <font>
+                                        <Font size="12.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="quantiteField" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-radius: 3;" prefWidth="100.0" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Stock Minimal" style="-fx-text-fill: #555555;">
+                                    <font>
+                                        <Font size="12.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="stockMinimalField" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-radius: 3;" prefWidth="100.0" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Date de Péremption" style="-fx-text-fill: #555555;">
+                                    <font>
+                                        <Font size="12.0" />
+                                    </font>
+                                </Label>
+                                <DatePicker fx:id="datePeremptionPicker" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-radius: 3;" prefWidth="150.0" />
+                            </children>
+                        </VBox>
+                        <VBox alignment="BOTTOM_LEFT" spacing="5.0">
+                            <padding>
+                                <Insets bottom="5.0" top="20.0" />
+                            </padding>
+                            <children>
+                                <CheckBox fx:id="critiqueCheckBox" mnemonicParsing="false" text="Produit Critique" style="-fx-text-fill: #c0392b;">
+                                    <font>
+                                        <Font size="12.0" />
+                                    </font>
+                                </CheckBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                    <VBox.margin>
+                        <Insets top="15.0" />
+                    </VBox.margin>
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#handleAjouter" text="Ajouter" style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-background-radius: 3; -fx-cursor: hand;">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="7.0" left="12.0" right="12.0" top="7.0" />
+                            </padding>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleModifier" text="Modifier" style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-background-radius: 3; -fx-cursor: hand;">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="7.0" left="12.0" right="12.0" top="7.0" />
+                            </padding>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleSupprimer" text="Supprimer" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-background-radius: 3; -fx-cursor: hand;">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="7.0" left="12.0" right="12.0" top="7.0" />
+                            </padding>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</VBox>

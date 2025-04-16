@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestion.controller.LoginController" style="-fx-background-color: #f5f5f5;">
+    <center>
+        <StackPane>
+            <children>
+                <VBox alignment="CENTER" spacing="20.0" maxWidth="400" maxHeight="450" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0); -fx-background-radius: 4;">
+                    <padding>
+                        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+                    </padding>
+                    <children>
+                        <Label text="ISIMM" textAlignment="CENTER" style="-fx-text-fill: #333333;">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                        </Label>
+                        <Label text="Gestion de Stock" textAlignment="CENTER" style="-fx-text-fill: #333333;">
+                            <font>
+                                <Font name="System Bold" size="24.0" />
+                            </font>
+                        </Label>
+                        <VBox spacing="5">
+                            <Label text="Nom d'utilisateur" style="-fx-text-fill: #555555;">
+                                <font>
+                                    <Font size="12.0" />
+                                </font>
+                            </Label>
+                            <TextField fx:id="usernameField" promptText="Entrez votre nom d'utilisateur" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-radius: 3; -fx-padding: 8 10;">
+                                <font>
+                                    <Font size="13.0" />
+                                </font>
+                            </TextField>
+                        </VBox>
+                        <VBox spacing="5">
+                            <Label text="Mot de passe" style="-fx-text-fill: #555555;">
+                                <font>
+                                    <Font size="12.0" />
+                                </font>
+                            </Label>
+                            <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-radius: 3; -fx-padding: 8 10;">
+                                <font>
+                                    <Font size="13.0" />
+                                </font>
+                            </PasswordField>
+                        </VBox>
+                        <Button onAction="#handleLogin" text="Se connecter" style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-background-radius: 3; -fx-padding: 10 0; -fx-cursor: hand;" maxWidth="Infinity">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="10.0" />
+                            </VBox.margin>
+                        </Button>
+                        <HBox alignment="CENTER">
+                            <Label text="© 2024 Institut Supérieur d'Informatique et de Mathématiques de Monastir" style="-fx-text-fill: #999999;">
+                                <font>
+                                    <Font size="10.0" />
+                                </font>
+                            </Label>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>

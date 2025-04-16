@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestion.controller.MainController" style="-fx-background-color: #f5f5f5;">
+    <left>
+        <VBox prefHeight="700.0" prefWidth="220.0" style="-fx-background-color: #2c3e50;" BorderPane.alignment="CENTER">
+            <children>
+                <VBox alignment="CENTER" prefHeight="60.0" prefWidth="220.0" style="-fx-background-color: #1c2833;">
+                    <children>
+                        <Label alignment="CENTER" text="Gestion de Stock" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
+                <VBox spacing="1.0">
+                    <VBox.margin>
+                        <Insets top="15.0" />
+                    </VBox.margin>
+                    <children>
+                        <Label text="NAVIGATION" textFill="#95a5a6" style="-fx-font-size: 11; -fx-padding: 0 0 5 15;" />
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDashboard" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-font-size: 13px;" text="Tableau de bord">
+                            <padding>
+                                <Insets left="15.0" />
+                            </padding>
+                        </Button>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleProduits" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-font-size: 13px;" text="Produits">
+                            <padding>
+                                <Insets left="15.0" />
+                            </padding>
+                        </Button>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleLocaux" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-font-size: 13px;" text="Locaux">
+                            <padding>
+                                <Insets left="15.0" />
+                            </padding>
+                        </Button>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleFournisseurs" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-font-size: 13px;" text="Fournisseurs">
+                            <padding>
+                                <Insets left="15.0" />
+                            </padding>
+                        </Button>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleServices" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-font-size: 13px;" text="Services">
+                            <padding>
+                                <Insets left="15.0" />
+                            </padding>
+                        </Button>
+                    </children>
+                </VBox>
+
+                <VBox spacing="1.0">
+                    <VBox.margin>
+                        <Insets top="15.0" />
+                    </VBox.margin>
+                    <children>
+                        <Label text="COMMANDES" textFill="#95a5a6" style="-fx-font-size: 11; -fx-padding: 0 0 5 15;" />
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleCommandesExternes" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-font-size: 13px;" text="Commandes Externes">
+                            <padding>
+                                <Insets left="15.0" />
+                            </padding>
+                        </Button>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleCommandesInternes" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-font-size: 13px;" text="Commandes Internes">
+                            <padding>
+                                <Insets left="15.0" />
+                            </padding>
+                        </Button>
+                    </children>
+                </VBox>
+
+                <VBox spacing="1.0">
+                    <VBox.margin>
+                        <Insets top="15.0" />
+                    </VBox.margin>
+                    <children>
+                        <Label text="RAPPORTS" textFill="#95a5a6" style="-fx-font-size: 11; -fx-padding: 0 0 5 15;" />
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleInventaire" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-font-size: 13px;" text="Inventaire">
+                            <padding>
+                                <Insets left="15.0" />
+                            </padding>
+                        </Button>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleStatistiques" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-font-size: 13px;" text="Statistiques">
+                            <padding>
+                                <Insets left="15.0" />
+                            </padding>
+                        </Button>
+                    </children>
+                </VBox>
+
+                <VBox VBox.vgrow="ALWAYS" />
+
+                <HBox alignment="CENTER_LEFT" prefHeight="40.0" style="-fx-background-color: #1c2833; -fx-padding: 0 15;">
+                    <children>
+                        <Label text="Admin" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="13.0" />
+                            </font>
+                        </Label>
+                        <Label text=" | Déconnexion" textFill="#95a5a6" style="-fx-cursor: hand;">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </left>
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="50.0" style="-fx-background-color: white; -fx-border-color: #eeeeee; -fx-border-width: 0 0 1 0;" BorderPane.alignment="CENTER">
+            <children>
+                <Label fx:id="titleLabel" text="Tableau de bord" style="-fx-text-fill: #333333;">
+                    <font>
+                        <Font name="System Bold" size="16.0" />
+                    </font>
+                    <HBox.margin>
+                        <Insets left="20.0" />
+                    </HBox.margin>
+                </Label>
+                <HBox alignment="CENTER_RIGHT" spacing="10.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label text="ISIMM - Système de Gestion de Stock" style="-fx-text-fill: #777777;">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                    </children>
+                    <padding>
+                        <Insets right="20.0" />
+                    </padding>
+                </HBox>
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <VBox alignment="CENTER" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+            <children>
+                <Label text="Bienvenue dans l'application de gestion de stock" style="-fx-text-fill: #333333;">
+                    <font>
+                        <Font name="System Bold" size="20.0" />
+                    </font>
+                </Label>
+                <Label text="Sélectionnez une option dans le menu de gauche" style="-fx-text-fill: #555555;">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets top="10.0" />
+                    </VBox.margin>
+                </Label>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>
