@@ -307,7 +307,7 @@
                                                         <Font size="14.0" />
                                                     </font>
                                                 </Label>
-                                                <Label fx:id="valeurStockLabel" text="0.00 €" textFill="WHITE">
+                                                <Label fx:id="valeurStockLabel" text="0.00 TND" textFill="WHITE">
                                                     <font>
                                                         <Font name="System Bold" size="24.0" />
                                                     </font>

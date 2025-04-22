@@ -134,7 +134,7 @@
                 <HBox alignment="CENTER_RIGHT" spacing="10.0">
                     <children>
                         <Label text="Total de la commande:" />
-                        <Label fx:id="totalLabel" text="0.00 €">
+                        <Label fx:id="totalLabel" text="0.00 TND">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>

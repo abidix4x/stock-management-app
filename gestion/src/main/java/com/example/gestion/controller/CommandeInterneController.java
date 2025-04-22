@@ -7,6 +7,7 @@ import com.example.gestion.model.CommandeInterne;
 import com.example.gestion.model.LigneCommandeInterne;
 import com.example.gestion.model.Produit;
 import com.example.gestion.model.Service;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -90,7 +91,9 @@ public class CommandeInterneController implements Initializable {
 
             // Configurer les colonnes de la TableView des commandes
             referenceColumn.setCellValueFactory(cellData->new SimpleStringProperty(cellData.getValue().getReference()));
-            //dateCommandeColumn.setCellValueFactory(cellData->new SimpleStringProperty(String.valueOf(cellData.getValue().getDateCommande())));
+            dateCommandeColumn.setCellValueFactory(cellData ->
+                    new ReadOnlyObjectWrapper<>(cellData.getValue().getDateCommande()));
+
             serviceColumn.setCellValueFactory(cellData ->
                     new SimpleStringProperty(cellData.getValue().getService().getNom()));
             statutColumn.setCellValueFactory(cellData->new SimpleStringProperty(cellData.getValue().getStatut()));
@@ -98,7 +101,7 @@ public class CommandeInterneController implements Initializable {
             // Configurer les colonnes de la TableView des lignes de commande
             produitColumn.setCellValueFactory(cellData ->
                     new SimpleStringProperty(cellData.getValue().getProduit().getDesignation()));
-            //quantiteColumn.setCellValueFactory(cellData->new SimpleStringProperty(String.valueOf(cellData.getValue().getQuantite())));
+            quantiteColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getQuantite()));
             stockDisponibleColumn.setCellValueFactory(cellData ->
                     new SimpleStringProperty(String.valueOf(cellData.getValue().getProduit().getQuantite())));
 

@@ -7,6 +7,7 @@ import com.example.gestion.model.CommandeExterne;
 import com.example.gestion.model.Fournisseur;
 import com.example.gestion.model.LigneCommandeExterne;
 import com.example.gestion.model.Produit;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -108,7 +109,9 @@ public class CommandeExterneController implements Initializable {
             // Configurer les colonnes de la TableView des commandes
             //referenceColumn.setCellValueFactory(new PropertyValueFactory<>("reference"));
             referenceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReference()));
-            dateCommandeColumn.setCellValueFactory(new PropertyValueFactory<>("dateCommande"));
+            dateCommandeColumn.setCellValueFactory(cellData ->
+                    new ReadOnlyObjectWrapper<>(cellData.getValue().getDateCommande()));
+
 
             fournisseurColumn.setCellValueFactory(cellData ->
                     new SimpleStringProperty(cellData.getValue().getFournisseur().getNom()));
@@ -121,8 +124,9 @@ public class CommandeExterneController implements Initializable {
             // Configurer les colonnes de la TableView des lignes de commande
             produitColumn.setCellValueFactory(cellData ->
                     new SimpleStringProperty(cellData.getValue().getProduit().getDesignation()));
-            quantiteColumn.setCellValueFactory(new PropertyValueFactory<>("quantite"));
-            prixUnitaireColumn.setCellValueFactory(new PropertyValueFactory<>("prixUnitaire"));
+            quantiteColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getQuantite()));
+            prixUnitaireColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getPrixUnitaire()));
+
             sousTotal.setCellValueFactory(cellData -> {
                 double total = cellData.getValue().getQuantite() * cellData.getValue().getPrixUnitaire();
                 return new SimpleStringProperty(currencyFormat.format(total));
