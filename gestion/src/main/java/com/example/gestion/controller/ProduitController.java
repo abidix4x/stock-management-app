@@ -9,6 +9,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -234,6 +241,103 @@ public class ProduitController implements Initializable {
     private void handleNouveau(ActionEvent event) {
         clearFields();
         selectedProduit = null;
+    }
+
+    @FXML
+    private void handleExportPDF(ActionEvent event) {
+        if (produitList.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Attention", "Aucun produit à exporter");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Enregistrer le PDF");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"));
+        fileChooser.setInitialFileName("Liste_Produits.pdf");
+        File file = fileChooser.showSaveDialog(produitTable.getScene().getWindow());
+
+        if (file != null) {
+            try (PDDocument document = new PDDocument()) {
+                PDPage page = new PDPage();
+                document.addPage(page);
+                float y = 700;
+                int productIndex = 0;
+                boolean isFirstPage = true;
+
+                while (productIndex < produitList.size()) {
+                    try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                        // Title (only on the first page)
+                        if (isFirstPage) {
+                            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
+                            contentStream.beginText();
+                            contentStream.newLineAtOffset(50, 750);
+                            contentStream.showText("Liste des Produits");
+                            contentStream.endText();
+                            isFirstPage = false;
+                        }
+
+                        // Table Headers
+                        contentStream.setFont(PDType1Font.HELVETICA_BOLD, 10);
+                        contentStream.beginText();
+                        contentStream.newLineAtOffset(50, 720);
+                        contentStream.showText("Référence");
+                        contentStream.newLineAtOffset(80, 0);
+                        contentStream.showText("Désignation");
+                        contentStream.newLineAtOffset(120, 0);
+                        contentStream.showText("Type");
+                        contentStream.newLineAtOffset(60, 0);
+                        contentStream.showText("Catégorie");
+                        contentStream.newLineAtOffset(60, 0);
+                        contentStream.showText("Quantité");
+                        contentStream.newLineAtOffset(50, 0);
+                        contentStream.showText("Stock Min");
+                        contentStream.newLineAtOffset(50, 0);
+                        contentStream.showText("Date Péremption");
+                        contentStream.newLineAtOffset(80, 0);
+                        contentStream.showText("Critique");
+                        contentStream.endText();
+
+                        // Table Data
+                        contentStream.setFont(PDType1Font.HELVETICA, 10);
+                        for (; productIndex < produitList.size(); productIndex++) {
+                            Produit produit = produitList.get(productIndex);
+                            contentStream.beginText();
+                            contentStream.newLineAtOffset(50, y);
+                            contentStream.showText(produit.getReference());
+                            contentStream.newLineAtOffset(80, 0);
+                            contentStream.showText(produit.getDesignation());
+                            contentStream.newLineAtOffset(120, 0);
+                            contentStream.showText(produit.getType());
+                            contentStream.newLineAtOffset(60, 0);
+                            contentStream.showText(produit.getCategorie());
+                            contentStream.newLineAtOffset(60, 0);
+                            contentStream.showText(String.valueOf(produit.getQuantite()));
+                            contentStream.newLineAtOffset(50, 0);
+                            contentStream.showText(String.valueOf(produit.getStockMinimal()));
+                            contentStream.newLineAtOffset(50, 0);
+                            contentStream.showText(produit.getDatePeremption() != null ? produit.getDatePeremption().toString() : "N/A");
+                            contentStream.newLineAtOffset(80, 0);
+                            contentStream.showText(produit.isCritique() ? "Oui" : "Non");
+                            contentStream.endText();
+                            y -= 20;
+
+                            if (y < 50 && productIndex + 1 < produitList.size()) {
+                                y = 700;
+                                page = new PDPage();
+                                document.addPage(page);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                document.save(file);
+                showAlert(Alert.AlertType.INFORMATION, "Succès", "Liste des produits exportée en PDF avec succès");
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'exportation en PDF: " + e.getMessage());
+            }
+        }
     }
 
     private boolean validateInputs() {

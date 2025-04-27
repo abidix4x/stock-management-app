@@ -11,79 +11,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <TabPane prefHeight="600.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestion.controller.StatistiquesController">
     <tabs>
-        <Tab text="Mouvements de stock">
-            <content>
-                <VBox spacing="10.0">
-                    <children>
-                        <HBox alignment="CENTER_LEFT" spacing="10.0">
-                            <children>
-                                <Label text="Période du:" />
-                                <DatePicker fx:id="dateDebutMouvements" />
-                                <Label text="au:" />
-                                <DatePicker fx:id="dateFinMouvements" />
-                                <Label text="Produit:" />
-                                <ComboBox fx:id="produitComboBox" prefWidth="200.0" />
-                                <Button mnemonicParsing="false" onAction="#handleRechercherMouvements" text="Rechercher" />
-                            </children>
-                            <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                            </padding>
-                        </HBox>
-                        <TableView fx:id="mouvementsTable" prefHeight="250.0" prefWidth="800.0">
-                            <columns>
-                                <TableColumn fx:id="dateMouvementColumn" prefWidth="120.0" text="Date" />
-                                <TableColumn fx:id="produitMouvementColumn" prefWidth="200.0" text="Produit" />
-                                <TableColumn fx:id="typeMouvementColumn" prefWidth="100.0" text="Type" />
-                                <TableColumn fx:id="quantiteMouvementColumn" prefWidth="100.0" text="Quantité" />
-                                <TableColumn fx:id="referenceCommandeColumn" prefWidth="150.0" text="Référence Commande" />
-                            </columns>
-                        </TableView>
-                        <HBox alignment="CENTER" spacing="20.0">
-                            <children>
-                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="400.0">
-                                    <children>
-                                        <Label text="Mouvements par type">
-                                            <font>
-                                                <Font name="System Bold" size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <PieChart fx:id="mouvementsPieChart" prefHeight="200.0" prefWidth="400.0" />
-                                    </children>
-                                </VBox>
-                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="400.0">
-                                    <children>
-                                        <Label text="Quantités par produit">
-                                            <font>
-                                                <Font name="System Bold" size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <BarChart fx:id="mouvementsBarChart" prefHeight="200.0" prefWidth="400.0">
-                                            <xAxis>
-                                                <CategoryAxis side="BOTTOM" />
-                                            </xAxis>
-                                            <yAxis>
-                                                <NumberAxis side="LEFT" />
-                                            </yAxis>
-                                        </BarChart>
-                                    </children>
-                                </VBox>
-                            </children>
-                            <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                            </padding>
-                        </HBox>
-                    </children>
-                </VBox>
-            </content>
-        </Tab>
         <Tab text="Commandes">
             <content>
                 <VBox spacing="10.0">
@@ -97,6 +30,7 @@
                                 <Label text="Type:" />
                                 <ComboBox fx:id="typeCommandeComboBox" prefWidth="150.0" />
                                 <Button mnemonicParsing="false" onAction="#handleRechercherCommandes" text="Rechercher" />
+                                <Button mnemonicParsing="false" onAction="#handleExportCommandesPDF" text="Exporter PDF" />
                             </children>
                             <padding>
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -111,7 +45,7 @@
                                                 <Font name="System Bold" size="14.0" />
                                             </font>
                                         </Label>
-                                        <PieChart fx:id="commandesPieChart" prefHeight="200.0" prefWidth="400.0" />
+                                        <PieChart fx:id="commandesPieChart" prefHeight="200.0" prefWidth="400.0" title="Répartition des Commandes par Statut" legendSide="RIGHT" />
                                     </children>
                                 </VBox>
                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="400.0">
@@ -121,12 +55,12 @@
                                                 <Font name="System Bold" size="14.0" />
                                             </font>
                                         </Label>
-                                        <BarChart fx:id="commandesBarChart" prefHeight="200.0" prefWidth="400.0">
+                                        <BarChart fx:id="commandesBarChart" prefHeight="200.0" prefWidth="400.0" title="Nombre de Commandes par Mois">
                                             <xAxis>
-                                                <CategoryAxis side="BOTTOM" />
+                                                <CategoryAxis side="BOTTOM" label="Mois" />
                                             </xAxis>
                                             <yAxis>
-                                                <NumberAxis side="LEFT" />
+                                                <NumberAxis side="LEFT" label="Nombre de Commandes" />
                                             </yAxis>
                                         </BarChart>
                                     </children>
@@ -218,6 +152,7 @@
                                 <Label text="Type:" />
                                 <ComboBox fx:id="typeProduitComboBox" prefWidth="150.0" />
                                 <Button mnemonicParsing="false" onAction="#handleRechercherInventaire" text="Rechercher" />
+                                <Button mnemonicParsing="false" onAction="#handleExportInventairePDF" text="Exporter PDF" />
                             </children>
                             <padding>
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -232,7 +167,7 @@
                                                 <Font name="System Bold" size="14.0" />
                                             </font>
                                         </Label>
-                                        <PieChart fx:id="categoriePieChart" prefHeight="200.0" prefWidth="400.0" />
+                                        <PieChart fx:id="categoriePieChart" prefHeight="200.0" prefWidth="400.0" title="Répartition par Catégorie" legendSide="RIGHT" />
                                     </children>
                                 </VBox>
                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="400.0">
@@ -242,12 +177,12 @@
                                                 <Font name="System Bold" size="14.0" />
                                             </font>
                                         </Label>
-                                        <BarChart fx:id="stockBarChart" prefHeight="200.0" prefWidth="400.0">
+                                        <BarChart fx:id="stockBarChart" prefHeight="200.0" prefWidth="400.0" title="Produits par Niveau de Stock">
                                             <xAxis>
-                                                <CategoryAxis side="BOTTOM" />
+                                                <CategoryAxis side="BOTTOM" label="Niveau de Stock" />
                                             </xAxis>
                                             <yAxis>
-                                                <NumberAxis side="LEFT" />
+                                                <NumberAxis side="LEFT" label="Nombre de Produits" />
                                             </yAxis>
                                         </BarChart>
                                     </children>
@@ -307,7 +242,7 @@
                                                         <Font size="14.0" />
                                                     </font>
                                                 </Label>
-                                                <Label fx:id="valeurStockLabel" text="0.00 TND" textFill="WHITE">
+                                                <Label fx:id="valeurStockLabel" text="0.000 TND" textFill="WHITE">
                                                     <font>
                                                         <Font name="System Bold" size="24.0" />
                                                     </font>

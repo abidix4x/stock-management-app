@@ -1,13 +1,6 @@
 package com.example.gestion.controller;
 
-import com.example.gestion.dao.CommandeExterneDAO;
-import com.example.gestion.dao.CommandeInterneDAO;
-import javafx.beans.property.SimpleIntegerProperty;
-import com.example.gestion.dao.ProduitDAO;
 import com.example.gestion.dao.StatistiquesDAO;
-import com.example.gestion.model.Mouvement;
-import com.example.gestion.model.Produit;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,53 +10,24 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
+import java.io.File;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 public class StatistiquesController implements Initializable {
-    // Onglet Mouvements
-    @FXML
-    private DatePicker dateDebutMouvements;
-
-    @FXML
-    private DatePicker dateFinMouvements;
-
-    @FXML
-    private ComboBox<Produit> produitComboBox;
-
-    @FXML
-    private TableView<Mouvement> mouvementsTable;
-
-    @FXML
-    private TableColumn<Mouvement, LocalDate> dateMouvementColumn;
-
-    @FXML
-    private TableColumn<Mouvement, String> produitMouvementColumn;
-
-    @FXML
-    private TableColumn<Mouvement, String> typeMouvementColumn;
-
-    @FXML
-    private TableColumn<Mouvement, Integer> quantiteMouvementColumn;
-
-    @FXML
-    private TableColumn<Mouvement, String> referenceCommandeColumn;
-
-    @FXML
-    private PieChart mouvementsPieChart;
-
-    @FXML
-    private BarChart<String, Number> mouvementsBarChart;
-
     // Onglet Commandes
     @FXML
     private DatePicker dateDebutCommandes;
@@ -111,8 +75,7 @@ public class StatistiquesController implements Initializable {
     @FXML
     private Label valeurStockLabel;
 
-    private ObservableList<Mouvement> mouvementsList = FXCollections.observableArrayList();
-    private NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.FRANCE);
+    private NumberFormat currencyFormat;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/yyyy");
 
     @Override
@@ -120,41 +83,23 @@ public class StatistiquesController implements Initializable {
         try {
             System.out.println("Initialisation du contrôleur de statistiques...");
 
+            // Configure currency format for TND (Tunisian Dinar)
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+            symbols.setDecimalSeparator('.');
+            symbols.setGroupingSeparator(' ');
+            DecimalFormat decimalFormat = new DecimalFormat("#,##0.000", symbols);
+            decimalFormat.setGroupingUsed(true);
+            currencyFormat = decimalFormat;
+
             // Initialiser les dates
             LocalDate today = LocalDate.now();
             LocalDate firstDayOfMonth = LocalDate.of(today.getYear(), today.getMonth(), 1);
             LocalDate lastDayOfMonth = firstDayOfMonth.plusMonths(1).minusDays(1);
 
-            dateDebutMouvements.setValue(firstDayOfMonth);
-            dateFinMouvements.setValue(lastDayOfMonth);
             dateDebutCommandes.setValue(firstDayOfMonth);
             dateFinCommandes.setValue(lastDayOfMonth);
 
-            // Configurer les colonnes de la TableView des mouvements
-           //dateMouvementColumn.setCellValueFactory(cellData->new SimpleStringProperty(cellData.getValue().getDateMouvement()));
-            produitMouvementColumn.setCellValueFactory(cellData ->
-                    new SimpleStringProperty(cellData.getValue().getProduit().getDesignation()));
-            typeMouvementColumn.setCellValueFactory(cellData->new SimpleStringProperty(cellData.getValue().getType()));
-            //quantiteMouvementColumn.setCellValueFactory(cellData->new SimpleStringProperty(cellData.getValue().getQuantite()));
-            referenceCommandeColumn.setCellValueFactory(cellData->new SimpleStringProperty(cellData.getValue().getReferenceCommande()));
-
             // Initialiser les ComboBox
-            List<Produit> produits = ProduitDAO.getAll();
-            produitComboBox.getItems().add(null); // Option pour "Tous les produits"
-            produitComboBox.getItems().addAll(produits);
-
-            produitComboBox.setConverter(new StringConverter<Produit>() {
-                @Override
-                public String toString(Produit produit) {
-                    return produit == null ? "Tous les produits" : produit.getDesignation();
-                }
-
-                @Override
-                public Produit fromString(String string) {
-                    return null; // Non utilisé
-                }
-            });
-
             typeCommandeComboBox.getItems().addAll("Toutes", "Externes", "Internes");
             typeCommandeComboBox.getSelectionModel().selectFirst();
 
@@ -167,7 +112,6 @@ public class StatistiquesController implements Initializable {
             typeProduitComboBox.getSelectionModel().selectFirst();
 
             // Charger les données initiales
-            handleRechercherMouvements(null);
             handleRechercherCommandes(null);
             handleRechercherInventaire(null);
 
@@ -176,55 +120,6 @@ public class StatistiquesController implements Initializable {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'initialisation: " + e.getMessage());
         }
-    }
-
-    @FXML
-    private void handleRechercherMouvements(ActionEvent event) {
-        try {
-            System.out.println("Recherche des mouvements...");
-            mouvementsList.clear();
-
-            LocalDate dateDebut = dateDebutMouvements.getValue();
-            LocalDate dateFin = dateFinMouvements.getValue();
-            Produit produit = produitComboBox.getValue();
-
-            List<Mouvement> mouvements = StatistiquesDAO.getMouvements(dateDebut, dateFin, produit != null ? produit.getId() : null);
-            mouvementsList.addAll(mouvements);
-            mouvementsTable.setItems(mouvementsList);
-
-            // Mettre à jour les graphiques
-            updateMouvementsCharts(mouvements);
-
-            System.out.println("Mouvements chargés: " + mouvementsList.size());
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la recherche des mouvements: " + e.getMessage());
-        }
-    }
-
-    private void updateMouvementsCharts(List<Mouvement> mouvements) {
-        // Graphique en camembert pour les types de mouvements
-        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-        Map<String, Integer> mouvementsByType = StatistiquesDAO.getMouvementsByType(mouvements);
-
-        for (Map.Entry<String, Integer> entry : mouvementsByType.entrySet()) {
-            pieChartData.add(new PieChart.Data(entry.getKey(), entry.getValue()));
-        }
-
-        mouvementsPieChart.setData(pieChartData);
-
-        // Graphique en barres pour les quantités par produit
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Quantité");
-
-        Map<String, Integer> mouvementsByProduit = StatistiquesDAO.getMouvementsByProduit(mouvements);
-
-        for (Map.Entry<String, Integer> entry : mouvementsByProduit.entrySet()) {
-            series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
-        }
-
-        mouvementsBarChart.getData().clear();
-        mouvementsBarChart.getData().add(series);
     }
 
     @FXML
@@ -274,6 +169,99 @@ public class StatistiquesController implements Initializable {
     }
 
     @FXML
+    private void handleExportCommandesPDF(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Enregistrer le PDF");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"));
+        fileChooser.setInitialFileName("Statistiques_Commandes.pdf");
+        File file = fileChooser.showSaveDialog(commandesPieChart.getScene().getWindow());
+
+        if (file != null) {
+            try (PDDocument document = new PDDocument()) {
+                PDPage page = new PDPage();
+                document.addPage(page);
+
+                try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                    // Titre
+                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 750);
+                    contentStream.showText("Statistiques des Commandes");
+                    contentStream.endText();
+
+                    // Période
+                    contentStream.setFont(PDType1Font.HELVETICA, 12);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 720);
+                    contentStream.showText("Période: " + dateDebutCommandes.getValue() + " au " + dateFinCommandes.getValue());
+                    contentStream.newLineAtOffset(0, -20);
+                    contentStream.showText("Type: " + typeCommandeComboBox.getValue());
+                    contentStream.endText();
+
+                    // Statistiques générales
+                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 670);
+                    contentStream.showText("Statistiques Générales");
+                    contentStream.endText();
+
+                    contentStream.setFont(PDType1Font.HELVETICA, 12);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 650);
+                    contentStream.showText("Total Commandes: " + totalCommandesLabel.getText());
+                    contentStream.newLineAtOffset(0, -20);
+                    contentStream.showText("Commandes Livrées: " + commandesLivreesLabel.getText());
+                    contentStream.newLineAtOffset(0, -20);
+                    contentStream.showText("Commandes En Cours: " + commandesEnCoursLabel.getText());
+                    contentStream.endText();
+
+                    // Commandes par Statut
+                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 590);
+                    contentStream.showText("Commandes par Statut");
+                    contentStream.endText();
+
+                    float y = 570;
+                    contentStream.setFont(PDType1Font.HELVETICA, 12);
+                    for (PieChart.Data data : commandesPieChart.getData()) {
+                        contentStream.beginText();
+                        contentStream.newLineAtOffset(50, y);
+                        contentStream.showText(data.getName() + ": " + (int)data.getPieValue());
+                        contentStream.endText();
+                        y -= 20;
+                    }
+
+                    // Commandes par Mois
+                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, y - 20);
+                    contentStream.showText("Commandes par Mois");
+                    contentStream.endText();
+
+                    y -= 40;
+                    contentStream.setFont(PDType1Font.HELVETICA, 12);
+                    for (XYChart.Series<String, Number> series : commandesBarChart.getData()) {
+                        for (XYChart.Data<String, Number> data : series.getData()) {
+                            contentStream.beginText();
+                            contentStream.newLineAtOffset(50, y);
+                            contentStream.showText(data.getXValue() + ": " + data.getYValue());
+                            contentStream.endText();
+                            y -= 20;
+                        }
+                    }
+                }
+
+                document.save(file);
+                showAlert(Alert.AlertType.INFORMATION, "Succès", "Statistiques des commandes exportées en PDF avec succès");
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'exportation en PDF: " + e.getMessage());
+            }
+        }
+    }
+
+    @FXML
     private void handleRechercherInventaire(ActionEvent event) {
         try {
             System.out.println("Recherche de l'inventaire...");
@@ -288,7 +276,7 @@ public class StatistiquesController implements Initializable {
             produitsEnAlerteLabel.setText(String.valueOf(statsInventaire.getOrDefault("en_alerte", 0)));
 
             Double valeurStock = (Double) statsInventaire.getOrDefault("valeur", 0.0);
-            valeurStockLabel.setText(currencyFormat.format(valeurStock));
+            valeurStockLabel.setText(currencyFormat.format(valeurStock) + " TND");
 
             // Graphique en camembert pour les catégories
             ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
@@ -317,6 +305,99 @@ public class StatistiquesController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la recherche de l'inventaire: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleExportInventairePDF(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Enregistrer le PDF");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"));
+        fileChooser.setInitialFileName("Statistiques_Inventaire.pdf");
+        File file = fileChooser.showSaveDialog(categoriePieChart.getScene().getWindow());
+
+        if (file != null) {
+            try (PDDocument document = new PDDocument()) {
+                PDPage page = new PDPage();
+                document.addPage(page);
+
+                try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                    // Titre
+                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 750);
+                    contentStream.showText("Statistiques de l'Inventaire");
+                    contentStream.endText();
+
+                    // Filtres
+                    contentStream.setFont(PDType1Font.HELVETICA, 12);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 720);
+                    contentStream.showText("Catégorie: " + categorieComboBox.getValue());
+                    contentStream.newLineAtOffset(0, -20);
+                    contentStream.showText("Type: " + typeProduitComboBox.getValue());
+                    contentStream.endText();
+
+                    // Statistiques générales
+                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 670);
+                    contentStream.showText("Statistiques Générales");
+                    contentStream.endText();
+
+                    contentStream.setFont(PDType1Font.HELVETICA, 12);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 650);
+                    contentStream.showText("Total Produits: " + totalProduitsLabel.getText());
+                    contentStream.newLineAtOffset(0, -20);
+                    contentStream.showText("Produits en Alerte: " + produitsEnAlerteLabel.getText());
+                    contentStream.newLineAtOffset(0, -20);
+                    contentStream.showText("Valeur du Stock: " + valeurStockLabel.getText());
+                    contentStream.endText();
+
+                    // Répartition par Catégorie
+                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 590);
+                    contentStream.showText("Répartition par Catégorie");
+                    contentStream.endText();
+
+                    float y = 570;
+                    contentStream.setFont(PDType1Font.HELVETICA, 12);
+                    for (PieChart.Data data : categoriePieChart.getData()) {
+                        contentStream.beginText();
+                        contentStream.newLineAtOffset(50, y);
+                        contentStream.showText(data.getName() + ": " + (int)data.getPieValue());
+                        contentStream.endText();
+                        y -= 20;
+                    }
+
+                    // Produits par Niveau de Stock
+                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, y - 20);
+                    contentStream.showText("Produits par Niveau de Stock");
+                    contentStream.endText();
+
+                    y -= 40;
+                    contentStream.setFont(PDType1Font.HELVETICA, 12);
+                    for (XYChart.Series<String, Number> series : stockBarChart.getData()) {
+                        for (XYChart.Data<String, Number> data : series.getData()) {
+                            contentStream.beginText();
+                            contentStream.newLineAtOffset(50, y);
+                            contentStream.showText(data.getXValue() + ": " + data.getYValue());
+                            contentStream.endText();
+                            y -= 20;
+                        }
+                    }
+                }
+
+                document.save(file);
+                showAlert(Alert.AlertType.INFORMATION, "Succès", "Statistiques de l'inventaire exportées en PDF avec succès");
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'exportation en PDF: " + e.getMessage());
+            }
         }
     }
 

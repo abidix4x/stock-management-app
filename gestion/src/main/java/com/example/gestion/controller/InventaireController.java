@@ -13,9 +13,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -280,6 +285,101 @@ public class InventaireController implements Initializable {
     private void handleNouveau(ActionEvent event) {
         clearFields();
         selectedStockage = null;
+    }
+
+    @FXML
+    private void handleExportPDF(ActionEvent event) {
+        if (stockageList.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Attention", "Aucun stockage à exporter");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Enregistrer le PDF");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"));
+        fileChooser.setInitialFileName("Inventaire_Produits.pdf");
+        File file = fileChooser.showSaveDialog(stockageTable.getScene().getWindow());
+
+        if (file != null) {
+            try (PDDocument document = new PDDocument()) {
+                PDPage page = new PDPage();
+                document.addPage(page);
+                float y = 700;
+                int stockIndex = 0;
+                boolean isFirstPage = true;
+
+                while (stockIndex < stockageList.size()) {
+                    try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                        // Title (only on the first page)
+                        if (isFirstPage) {
+                            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
+                            contentStream.beginText();
+                            contentStream.newLineAtOffset(50, 750);
+                            contentStream.showText("Inventaire des Produits par Local");
+                            contentStream.endText();
+                            isFirstPage = false;
+                        }
+
+                        // Table Headers
+                        contentStream.setFont(PDType1Font.HELVETICA_BOLD, 10);
+                        contentStream.beginText();
+                        contentStream.newLineAtOffset(50, 720);
+                        contentStream.showText("Produit");
+                        contentStream.newLineAtOffset(120, 0);
+                        contentStream.showText("Local");
+                        contentStream.newLineAtOffset(120, 0);
+                        contentStream.showText("Quantité");
+                        contentStream.newLineAtOffset(80, 0);
+                        contentStream.showText("Stock Minimal");
+                        contentStream.newLineAtOffset(80, 0);
+                        contentStream.showText("Statut");
+                        contentStream.endText();
+
+                        // Table Data
+                        contentStream.setFont(PDType1Font.HELVETICA, 10);
+                        for (; stockIndex < stockageList.size(); stockIndex++) {
+                            Stockage stockage = stockageList.get(stockIndex);
+                            contentStream.beginText();
+                            contentStream.newLineAtOffset(50, y);
+                            contentStream.showText(stockage.getProduit().getDesignation());
+                            contentStream.newLineAtOffset(120, 0);
+                            contentStream.showText(stockage.getLocal().getDesignation());
+                            contentStream.newLineAtOffset(120, 0);
+                            contentStream.showText(String.valueOf(stockage.getQuantite()));
+                            contentStream.newLineAtOffset(80, 0);
+                            contentStream.showText(String.valueOf(stockage.getProduit().getStockMinimal()));
+                            contentStream.newLineAtOffset(80, 0);
+                            String statut;
+                            int quantite = stockage.getQuantite();
+                            int stockMinimal = stockage.getProduit().getStockMinimal();
+                            if (quantite <= 0) {
+                                statut = "Rupture de stock";
+                            } else if (quantite <= stockMinimal) {
+                                statut = "Stock critique";
+                            } else {
+                                statut = "Stock normal";
+                            }
+                            contentStream.showText(statut);
+                            contentStream.endText();
+                            y -= 20;
+
+                            if (y < 50 && stockIndex + 1 < stockageList.size()) {
+                                y = 700;
+                                page = new PDPage();
+                                document.addPage(page);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                document.save(file);
+                showAlert(Alert.AlertType.INFORMATION, "Succès", "Inventaire exporté en PDF avec succès");
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'exportation en PDF: " + e.getMessage());
+            }
+        }
     }
 
     private boolean validateInputs() {

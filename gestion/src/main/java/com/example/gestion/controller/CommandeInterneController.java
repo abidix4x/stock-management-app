@@ -15,9 +15,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -90,13 +95,12 @@ public class CommandeInterneController implements Initializable {
             System.out.println("Initialisation du contrôleur de commandes internes...");
 
             // Configurer les colonnes de la TableView des commandes
-            referenceColumn.setCellValueFactory(cellData->new SimpleStringProperty(cellData.getValue().getReference()));
+            referenceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReference()));
             dateCommandeColumn.setCellValueFactory(cellData ->
                     new ReadOnlyObjectWrapper<>(cellData.getValue().getDateCommande()));
-
             serviceColumn.setCellValueFactory(cellData ->
                     new SimpleStringProperty(cellData.getValue().getService().getNom()));
-            statutColumn.setCellValueFactory(cellData->new SimpleStringProperty(cellData.getValue().getStatut()));
+            statutColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatut()));
 
             // Configurer les colonnes de la TableView des lignes de commande
             produitColumn.setCellValueFactory(cellData ->
@@ -457,6 +461,78 @@ public class CommandeInterneController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
                 showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la livraison de la commande: " + e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    private void handleExportPDF(ActionEvent event) {
+        if (selectedCommande == null || selectedCommande.getId() <= 0) {
+            showAlert(Alert.AlertType.WARNING, "Attention", "Veuillez sélectionner une commande à exporter");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Enregistrer le PDF");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"));
+        fileChooser.setInitialFileName("CommandeInterne_" + selectedCommande.getReference() + ".pdf");
+        File file = fileChooser.showSaveDialog(commandeTable.getScene().getWindow());
+
+        if (file != null) {
+            try (PDDocument document = new PDDocument()) {
+                PDPage page = new PDPage();
+                document.addPage(page);
+
+                try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 750);
+                    contentStream.showText("Commande Interne");
+                    contentStream.endText();
+
+                    contentStream.setFont(PDType1Font.HELVETICA, 12);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 720);
+                    contentStream.showText("Référence: " + selectedCommande.getReference());
+                    contentStream.newLineAtOffset(0, -20);
+                    contentStream.showText("Date: " + selectedCommande.getDateCommande().toString());
+                    contentStream.newLineAtOffset(0, -20);
+                    contentStream.showText("Service: " + selectedCommande.getService().getNom());
+                    contentStream.newLineAtOffset(0, -20);
+                    contentStream.showText("Statut: " + selectedCommande.getStatut());
+                    contentStream.endText();
+
+                    // Tableau des lignes de commande
+                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 620);
+                    contentStream.showText("Produit");
+                    contentStream.newLineAtOffset(200, 0);
+                    contentStream.showText("Quantité");
+                    contentStream.newLineAtOffset(100, 0);
+                    contentStream.showText("Stock Disponible");
+                    contentStream.endText();
+
+                    contentStream.setFont(PDType1Font.HELVETICA, 12);
+                    float y = 600;
+                    for (LigneCommandeInterne ligne : selectedCommande.getLignes()) {
+                        contentStream.beginText();
+                        contentStream.newLineAtOffset(50, y);
+                        contentStream.showText(ligne.getProduit().getDesignation());
+                        contentStream.newLineAtOffset(200, 0);
+                        contentStream.showText(String.valueOf(ligne.getQuantite()));
+                        contentStream.newLineAtOffset(100, 0);
+                        contentStream.showText(String.valueOf(ligne.getProduit().getQuantite()));
+                        contentStream.endText();
+                        y -= 20;
+                    }
+                }
+
+                document.save(file);
+                showAlert(Alert.AlertType.INFORMATION, "Succès", "Commande exportée en PDF avec succès");
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'exportation en PDF: " + e.getMessage());
             }
         }
     }

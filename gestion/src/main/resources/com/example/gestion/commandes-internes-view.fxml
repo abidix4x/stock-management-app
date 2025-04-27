@@ -76,6 +76,7 @@
                         <Button mnemonicParsing="false" onAction="#handleNouveau" text="Nouvelle commande" />
                         <Button mnemonicParsing="false" onAction="#handleEnregistrer" text="Enregistrer" />
                         <Button mnemonicParsing="false" onAction="#handleSupprimer" text="Supprimer" />
+                        <Button mnemonicParsing="false" onAction="#handleExportPDF" text="Exporter PDF" />
                     </children>
                 </HBox>
             </children>

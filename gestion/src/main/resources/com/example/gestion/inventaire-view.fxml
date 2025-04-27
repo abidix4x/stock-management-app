@@ -69,6 +69,14 @@
                         <Button mnemonicParsing="false" onAction="#handleAjouter" text="Ajouter" />
                         <Button mnemonicParsing="false" onAction="#handleModifier" text="Modifier" />
                         <Button mnemonicParsing="false" onAction="#handleSupprimer" text="Supprimer" />
+                        <Button mnemonicParsing="false" onAction="#handleExportPDF" text="Exporter PDF" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-background-radius: 3; -fx-cursor: hand;">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="7.0" left="12.0" right="12.0" top="7.0" />
+                            </padding>
+                        </Button>
                     </children>
                 </HBox>
             </children>
